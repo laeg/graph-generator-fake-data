@@ -1,0 +1,33 @@
+
+build:
+     [echo] EDF ECM Audit and Transmittal Migration JAR
+
+clean:
+     [echo] Clean Build
+     [echo] Deleting Build Directory
+   [delete] Deleting directory D:\Users\lukganno\Documents\EDF NNB\code\java\MigrationAuditTransmittal\class
+
+init:
+     [echo] Initialise Build
+     [echo] Creating Build Directories
+    [mkdir] Created dir: D:\Users\lukganno\Documents\EDF NNB\code\java\MigrationAuditTransmittal\class
+
+compile-src:
+     [echo] Compile Java Source
+    [javac] Compiling 22 source files to D:\Users\lukganno\Documents\EDF NNB\code\java\MigrationAuditTransmittal\class
+    [javac] Creating empty D:\Users\lukganno\Documents\EDF NNB\code\java\MigrationAuditTransmittal\class\com\edf\nnb\ba\ecm\migration\logging\package-info.class
+    [javac] Creating empty D:\Users\lukganno\Documents\EDF NNB\code\java\MigrationAuditTransmittal\class\com\edf\nnb\ba\ecm\migration\database\package-info.class
+    [javac] Creating empty D:\Users\lukganno\Documents\EDF NNB\code\java\MigrationAuditTransmittal\class\com\edf\nnb\ba\ecm\migration\audit\package-info.class
+    [javac] Creating empty D:\Users\lukganno\Documents\EDF NNB\code\java\MigrationAuditTransmittal\class\com\edf\nnb\ba\ecm\migration\transmittal\package-info.class
+    [javac] Creating empty D:\Users\lukganno\Documents\EDF NNB\code\java\MigrationAuditTransmittal\class\com\edf\nnb\ba\ecm\migration\utility\package-info.class
+    [javac] Creating empty D:\Users\lukganno\Documents\EDF NNB\code\java\MigrationAuditTransmittal\class\com\edf\nnb\ba\ecm\migration\repository\package-info.class
+
+copy-properties:
+     [echo] Copying Properties Files
+     [copy] Copying 2 files to D:\Users\lukganno\Documents\EDF NNB\code\java\MigrationAuditTransmittal\class
+
+package:
+      [jar] Building jar: D:\Users\lukganno\Documents\EDF NNB\code\java\MigrationAuditTransmittal\lib\edf\edf-ecm-audit-transmittal-migration-export.jar
+
+BUILD SUCCESSFUL
+Total time: 1 second

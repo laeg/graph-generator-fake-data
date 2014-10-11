@@ -1,0 +1,1 @@
+ant -buildfile ../ant/build.xml transmittal-start-mig -logfile ../log/transmittal-start-stdout.log

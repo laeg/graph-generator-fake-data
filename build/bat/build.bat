@@ -1,0 +1,1 @@
+ant -buildfile ../ant/build.xml build -logfile ../log/build.log

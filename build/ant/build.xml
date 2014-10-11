@@ -1,0 +1,209 @@
+<project name="EDF_ECM_Audit_Transmittal_Migration" default="build" basedir=".">
+    
+	<!-- Project Description -->
+	<description>
+		EDF ECM Audit and Transmittal Migration Java Build File
+	</description>
+	
+	<!-- Import Environment Variable Properties -->
+	<property environment = "env"/>
+	<property name="svn.dir" value="${env.BUILD_SVN}"/>
+
+	<!-- Import build.properties -->
+	<property file="build.properties"/>
+	
+	<!-- ************************************************** -->
+	<!-- ** PROJECT CLASSPATH CONFIGURATION					-->
+	<!-- ************************************************** -->
+	
+	<!-- Configure the Compiled Source Classpath -->
+	<path id="build.classpath">
+		<pathelement path="${build.class.dir}"/>	
+	</path>
+	
+	<!-- Configure the Library Classpath -->
+	<path id="lib.classpath">
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar"/>
+		</fileset>	
+	</path>
+	
+	<!-- Configure the General Configuration Classpath -->
+	<path id="config.classpath">
+		<pathelement path="${log4j.config.dir}"/>	
+	</path>
+	
+	<!-- Configure the General Configuration Classpath -->
+	<path id="config.gen.classpath">
+		<pathelement path="${gen.log4j.config.dir}"/>	
+	</path>
+	
+	<!-- Configure the Migration Configuration Classpath -->
+	<path id="config.mig.classpath">
+		<pathelement path="${mig.documentum.config.dir}"/>
+		<pathelement path="${mig.log4j.config.dir}"/>	
+	</path>
+	
+	<!-- Configure the Production Configuration Classpath -->
+	<path id="config.prod.classpath">
+		<pathelement path="${prod.documentum.config.dir}"/>
+		<pathelement path="${prod.log4j.config.dir}"/>	
+	</path>
+	
+	<!-- Configure the Production Configuration Classpath -->
+	<path id="config.eclipse.classpath">
+		<pathelement path="${eclipse.log4j.config.dir}"/>	
+	</path>
+	
+	<!-- ************************************************** -->
+	<!-- ** PROJECT BUILD CONFIGURATION						-->
+	<!-- ************************************************** -->
+	
+	<!-- Build Target -->
+	<target name="build" description="Build">
+	
+		<!-- Output Message -->
+		<echo message="EDF ECM Audit and Transmittal Migration JAR"/>
+		
+		<!-- Call Initialisation Targets -->
+		<antcall target="clean"/>
+		<antcall target="init"/>
+		
+		<!-- Call Compilation Targets -->
+		<antcall target="compile-src"/>
+		<antcall target="copy-properties"/>
+			
+		<!-- Call Packaging Targets -->
+		<antcall target="package"/>
+
+	</target>
+	
+	<!-- Clean Build -->
+	<target name="clean" description="Clean Up Build" >
+	
+		<!-- Output Message -->
+		<echo message="Clean Build"/>
+		
+		<!-- Delete the Build Directory Structure -->
+		<echo message="Deleting Build Directory"/>
+		<delete dir="${build.class.dir}" quiet="true"/>
+			
+	</target>
+	
+	<!-- Initialise Build -->
+	<target name="init" description="Initialise Build">
+		
+		<!-- Output Message -->
+		<echo message="Initialise Build"/>
+		
+		<!-- Create the Build directory structure used by compile -->
+		<echo message="Creating Build Directories"/>
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${build.class.dir}"/>
+
+	</target>
+	
+	<!-- Compile Source -->
+	<target name="compile-src" description="Compile Java Source">
+
+		<!-- Output Message -->
+		<echo message="Compile Java Source"/>
+
+		<!-- Compile the java code from ${src.dir} into ${build.dir} -->
+		<javac 	srcdir="${build.src.dir}" 
+				destdir="${build.class.dir}"
+				includeAntRuntime="yes"
+				debug="true">
+			
+			<!-- debugging -->
+			<!-- <compilerarg value="-Xlint:unchecked"/> -->
+			
+			<!-- Configure the Classpath -->
+			<classpath refid="lib.classpath"/>
+			
+		</javac>
+			
+	</target>
+	
+	<!-- Copy Properties -->
+	<target name="copy-properties" description="Copies any properties files from src to build">
+		
+		<!-- Output Message -->
+		<echo message="Copying Properties Files"/>
+		
+		<!-- Copy the Properties Files -->
+		<copy 	todir="${build.class.dir}"
+				overwrite="true">
+			
+			<fileset dir="${build.src.dir}">
+				<exclude name="**/*.java"/>
+			</fileset>
+		
+		</copy>
+
+	</target>
+	
+	<!-- Package the Audit & Transmittal Migration JAR Files -->
+    <target name="package" description="Package the Audit and Transmittal Migration JAR Files">
+	    	
+    	<!-- Build the Migration JAR File -->
+		<jar destfile="${build.package.dir}/${migration.jar}.jar">
+
+    		<!-- Migration Class Files -->
+			<fileset dir="${build.class.dir}">
+				
+				<!-- Migration Files -->
+				<include name="com/edf/nnb/ba/ecm/migration/**/*.class"/>
+				<include name="com/edf/nnb/ba/ecm/migration/**/*.properties"/>
+				
+				<!-- Project Files -->
+				<exclude name="com/edf/nnb/ba/ecm/migration/load/project/*.class"/>
+					
+			</fileset>
+				
+		</jar>
+    	    	    	
+    </target>
+	
+	<!-- ************************************************** -->
+	<!-- ** EXPORT EXCEPTION CONFIGURATION					-->
+	<!-- ************************************************** -->
+	
+	<!-- Build Target -->
+	<target name="transmittal-start-mig" description="Transmittal Migration - MIG">
+	
+		<!-- Output Message -->
+		<echo message="Transmittal Migration - MIG"/>
+		
+		<!-- Export the Migration Exceptions -->
+		<java classname="${export.transmittal.class}">
+			<arg value="${mig.repository}"/>
+			<arg value="${mig.username}"/>
+			<arg value="${mig.password}"/>
+			<arg value="${mig.startYear}"/>
+			<arg value="${mig.startMonth}"/>
+			<arg value="${mig.endYear}"/>
+			<arg value="${mig.endMonth}"/>
+			<arg value="${mig.environment}"/>
+			<classpath refid="lib.classpath"/>
+			<classpath refid="config.mig.classpath"/>
+		</java>
+	</target>
+		
+	<!-- Build Target -->
+	<target name="transmittal-start-prod" description="Transmittal Migration - PROD">
+	
+		<!-- Output Message -->
+		<echo message="Transmittal Migration - PROD"/>
+		
+		<!-- Export the Migration Exceptions -->
+		<java classname="${export.transmittal.class}">
+			<arg value="${prod.repository}"/>
+			<arg value="${prod.username}"/>
+			<arg value="${prod.password}"/>
+			<classpath refid="lib.classpath"/>
+			<classpath refid="config.classpath"/>
+		</java>
+	</target>
+	
+</project>
