@@ -61,9 +61,14 @@ public class StartGraphBuild {
 		// Create a database
 		GraphDatabaseService graphDb = GraphDatabase.createDb();
 
-		//Flight flight = createATestFlight(Integer.parseInt(args[0]));
+		
+		
 		for (String carrierName : Flight.carrierNameOptions){
-			GraphDatabase.createNode(graphDb, "Carrier", createAMapForCarriers("airlineName", carrierName));
+			GraphDatabase.createNode(graphDb, "Carrier", createAMapForNoAttributes("airlineName", carrierName));
+		}
+		
+		for (String airportName : Flight.airportNameOptions){
+			GraphDatabase.createNode(graphDb, "Airports", createAMapForNoAttributes("airportName", airportName));
 		}
 		
 		Map<Integer, Flight> listOfFlights = new HashMap<Integer, Flight>();
@@ -78,15 +83,21 @@ public class StartGraphBuild {
 			// Create a relationship to the airline
 			GraphDatabase.createRelationship(graphDb, "airlineName", flight.getCarrierName(), RelTypes.HAS_FLIGHT, "carrierName", flight.getCarrierName());
 			
+			// Create a relationship to the airports
+			GraphDatabase.createRelationship(graphDb, "airportName", flight.getDeparture(), RelTypes.FROM_AIRPORT, "flightNumber",  Integer.toString(flight.getFlightNumber()));
+			GraphDatabase.createRelationship(graphDb,"flightNumber",  Integer.toString(flight.getFlightNumber()),RelTypes.TO_AIRPORT, "airportName", flight.getArrival());
+			
 			// Get each list of users from generated users
 			for (Entry<Integer, Person> attribute : flight.getPeopleOnPlane().entrySet()) {
 				Person p = attribute.getValue();
 				
 				GraphDatabase.createNode(graphDb, "People", getDetails(p));
-				//System.out.println("passportNumber" + Integer.toString(p.getIdentifier()) + RelTypes.ON_FLIGHT + "flightNumber" + Integer.toString(flight.getFlightNumber()));
 				GraphDatabase.createRelationship(graphDb, "passportNumber", Integer.toString(p.getIdentifier()), RelTypes.ON_FLIGHT, "flightNumber", Integer.toString(flight.getFlightNumber()));
+			
 			}
 		}
+		
+		//GraphDatabase.createPossibleRelationship(graphDb, "firstName", "Conrado");
 		
 		//for (Entry<Integer, Person> attribute : flight.getPeopleOnPlane().entrySet()) {
 		//	Person p = attribute.getValue();
@@ -154,7 +165,7 @@ public class StartGraphBuild {
 
 	}
 	
-	private static Map<String, String> createAMapForCarriers(String key, String value){
+	private static Map<String, String> createAMapForNoAttributes(String key, String value){
 		Map<String, String> aMap = new HashMap<String, String>();
 		aMap.put(key, value);
 		return aMap;
