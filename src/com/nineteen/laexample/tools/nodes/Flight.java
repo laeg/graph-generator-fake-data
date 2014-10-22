@@ -48,8 +48,8 @@ public class Flight {
 	 * Array of random carrier names
 	 */
 	public static final String[] carrierNameOptions = { "British Airways", "Virgin Atlantic", "American Airlines", "Southwest Airlines",
-			"Delta Air Lines" };
-
+		"Delta Air Lines",  "Emirates Airline", "Qatar Airways", "Saudi Arabian Airlines", "AirAsia", "Air China", "Air New Zealand Group", "Cathay Pacific", "Jet Airways", 
+		"Kingfisher Airlines", "Korean Air", "Virgin Blue Airlines", "Air France KLM", "Lufthansa", "SAS Scandinavian Airlines", "Air Canada", "AirLAEG"};
 	/**
 	 * Array of random airport names
 	 */
