@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import org.apache.commons.lang.math.RandomUtils;
 
@@ -173,7 +174,7 @@ public class Flight {
 		Map<Integer, Flight> generatedFlights = new HashMap<Integer, Flight>();
 		Flight f;
 		int i;
-		for (i = 0; i < numberOfFlights - 1; i++) {
+		for (i = 1; i <= numberOfFlights; i++) {
 			f = createARandomFlight(peopleOnBoardEachFlight);
 			generatedFlights.put(f.getFlightNumber(), f);
 		}
@@ -222,7 +223,7 @@ public class Flight {
 		Map<Integer, Person> generatedUsers = new HashMap<Integer, Person>();
 		Person p;
 		int i;
-		for (i = 0; i < userAmount - 1; i++) {
+		for (i = 1; i <= userAmount; i++) {
 			p = createARandomPerson();
 			generatedUsers.put(p.getIdentifier(), p);
 		}
@@ -242,14 +243,29 @@ public class Flight {
 		// Random name pickers
 		int firstNameRandomSelector = (int) (Math.random() * Person.firstNameOptions.length);
 		int lastNameRandomSelector = (int) (Math.random() * Person.lastNameOptions.length);
+		int genderSelector = (int) (Math.random() * Person.genderOptions.length + 1);
 		newPerson.setIdentifier((int) Math.abs(System.currentTimeMillis() - RandomUtils.nextLong()));
 		newPerson.setFirstName(Person.firstNameOptions[firstNameRandomSelector]);
 		newPerson.setLastName(Person.lastNameOptions[lastNameRandomSelector]);
+		if ( genderSelector < 1) {
+			newPerson.setGender(Person.genderOptions[genderSelector]);
+		}else {
+			newPerson.setGender("");
+		}
 		newPerson.setDateOfBirth(new Date(Math.abs(System.currentTimeMillis() - RandomUtils.nextLong())));
-		newPerson.setCriminalRecord("0");
+		newPerson.setCriminalRecord(Integer.toString(generateRandom(0,1)));
 
 		return newPerson;
 
+	}
+	
+	private static int generateRandom ( int min, int max) {
+		Random rand = new Random();
+		
+		int randomNumber = rand.nextInt( ( max - min ) + 1 );
+		
+		return randomNumber;
+		
 	}
 
 }

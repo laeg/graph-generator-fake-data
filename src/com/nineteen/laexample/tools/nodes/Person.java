@@ -18,7 +18,12 @@ public class Person {
 	 * The persons first name
 	 */
 	private String lastName;
-
+	
+	/**
+	 * The persons sex
+	 */
+	private String gender;
+	
 	/**
 	 * The persons dob from EPOCH time (01-01-1970)
 	 */
@@ -44,7 +49,29 @@ public class Person {
 			"Taylor", "Richards", "Lewis", "Samuels", "Slater", "Hoppus", "Hall", "Wilson", "Goldman", "Corns", "Bell", "Brown", "Russell", "Bird",
 			"Plant", "Harrison", "Gillies", "Gerber", "Barrick", "Padmanabhan", "Sadinov", "Baldwin", "Saxby", "Shaw", "Desai", "Pell", "Timbers",
 			"Doey" };
+	/**
+	 * Array of genders
+	 */
+	public static final String[] genderOptions = {"male","female"};
 
+	/**
+	 * Person constructor
+	 * @param identifier
+	 * @param firstName
+	 * @param lastName
+	 * @param gender
+	 * @param dateOfBirth
+	 * @param criminalRecord
+	 */
+	public Person (Integer identifier, String firstName, String lastName, String gender, Date dateOfBirth, String criminalRecord) {
+		this.identifier = identifier;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.gender = gender;
+		this.dateOfBirth = dateOfBirth;
+		this.criminalRecord = criminalRecord;
+	}
+	
 	/**
 	 * @return the firstName
 	 */
@@ -120,4 +147,20 @@ public class Person {
 		this.identifier = identifier;
 	}
 
+	/**
+	 * @return the gender
+	 */
+	public String getGender() {
+		return gender;
+	}
+
+	/**
+	 * @param gender the gender to set
+	 */
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	
+	
 }

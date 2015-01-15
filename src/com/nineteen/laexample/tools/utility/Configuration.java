@@ -40,7 +40,7 @@ public final class Configuration {
         } catch (MissingResourceException e) {
 
             // Log an Exception
-            Logger.getLogger("com.edf.nnb.ba.ecm.migration").error(
+            Logger.getLogger("com.nineteen.laexample.tools").error(
                     key + " could not be found");
             return '!' + key + '!';
         }

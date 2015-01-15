@@ -52,9 +52,6 @@ public class StartGraphBuild {
 
 		// Instantiate the Logger
 		theLogger = ToolLogger.getLogger();
-		// theGraphDatabase = new GraphDatabase();
-		// theGraphManager = new GraphManager();
-		// theFileDirectory = new FileDirectory();
 
 	}
 
@@ -119,8 +116,6 @@ public class StartGraphBuild {
 
 		System.out.println("\nFinished creating and querying your graph \n \n---- Created by LAExample ----");
 
-		
-
 	}
 
 	private static Map<String, String> getDetails(Flight flight) {
@@ -141,6 +136,7 @@ public class StartGraphBuild {
 		personAttr.put("passportNumber", Integer.toString(person.getIdentifier()));
 		personAttr.put("firstName", person.getFirstName());
 		personAttr.put("lastName", person.getLastName());
+		personAttr.put("gender", person.getGender());
 		personAttr.put("dateOfBirth", person.getDateOfBirth().toString());
 		personAttr.put("criminalRecord", person.getCriminalRecord());
 

@@ -14,7 +14,7 @@ public final class Messages {
     /**
      * The name of the Message Resource Bundle.
      */
-    private static final String BUNDLE_NAME = "com.capgemini.tools.utility.messages";
+    private static final String BUNDLE_NAME = "com.nineteen.laexample.tools.messages";
 
     /**
      * The Message Resource Bundle.
@@ -41,7 +41,7 @@ public final class Messages {
         } catch (MissingResourceException e) {
 
             // Log an Exception
-            Logger.getLogger("com.edf.nnb.ba.ecm.migration").error(key + " could not be found");
+            Logger.getLogger("com.nineteen.laexample.tools").error(key + " could not be found");
             return '!' + key + '!';
         }
     }

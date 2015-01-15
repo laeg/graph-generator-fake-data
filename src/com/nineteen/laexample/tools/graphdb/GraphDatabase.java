@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.neo4j.cypher.internal.compiler.v2_1.planner.logical.plans.NodeIndexUniqueSeek;
 import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
@@ -117,7 +116,7 @@ public class GraphDatabase {
 
 		return graphDb;
 	}
-	
+
 	/**
 	 * Create a node with attributes
 	 * 
@@ -136,20 +135,9 @@ public class GraphDatabase {
 
 			if (!nodeLabel.isEmpty()) {
 				if (!nodeAttributes.isEmpty()) {
-					
-					//Integer weight;
-					 
-					//for (Map.Entry<String, String> checkAttribute : nodeAttributes.entrySet()) {
-					//	if (graphDb.findNodesByLabelAndProperty(DynamicLabel.label(nodeLabel), checkAttribute.getKey(), checkAttribute.getKey()).iterator() != null) {
-					//		
-					//	}
-					//}
-						
+											
 						// create the node
 						aNode = graphDb.createNode();
-	
-						// add the node label
-						aNode.addLabel(DynamicLabel.label(nodeLabel));
 	
 						// Get each attribute and set node properties == to
 						// attributes
@@ -157,6 +145,20 @@ public class GraphDatabase {
 							aNode.setProperty(attribute.getKey(), attribute.getValue());
 						}
 	
+						// add the node label
+						if (nodeLabel.equalsIgnoreCase ( "People" ) ){
+							String criminal = nodeAttributes.get("criminalRecord");
+							if (!criminal.contentEquals(Integer.toString(1))){
+								aNode.addLabel(DynamicLabel.label(nodeLabel));
+							} else {
+								aNode.addLabel(DynamicLabel.label("BadPerson"));
+							}
+						} else {
+							aNode.addLabel(DynamicLabel.label(nodeLabel));
+						}
+							
+						
+						
 						// Get each attribute and add to the index
 						for (Map.Entry<String, String> attribute : nodeAttributes.entrySet()) {
 							nodeIndex.add(aNode, attribute.getKey(), attribute.getValue());
@@ -286,7 +288,8 @@ public class GraphDatabase {
 
 	/**
 	 */
-	public static void createPossibleRelationship(GraphDatabaseService graphDb, String aAttributeName, String aValue, String bAttributeName, String bValue) {
+	public static void createPossibleRelationship(GraphDatabaseService graphDb, String aAttributeName, String aValue, String bAttributeName,
+			String bValue) {
 		// Start a transaction
 		Transaction tx = graphDb.beginTx();
 
@@ -358,9 +361,10 @@ public class GraphDatabase {
 				foundNodes.add(findables.next());
 			}
 
-			System.out.println("\tLabel - " + nodeType + "  | Attribute - " + nodeAttribute + " | Value - "
-					+ nodeRequiredValue + "\nResults for query:");
-			System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+			System.out.println("\tLabel - " + nodeType + "  | Attribute - " + nodeAttribute + " | Value - " + nodeRequiredValue
+					+ "\nResults for query:");
+			System.out
+					.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
 			StringBuilder columnRowBuilder = new StringBuilder();
 			String columnRow;
@@ -368,51 +372,50 @@ public class GraphDatabase {
 			String resultRow;
 			StringBuilder relationshipBuilder = new StringBuilder();
 			String relationshipsString;
-			
+
 			// Loop through the graph finding nodes that match
 			if (!foundNodes.isEmpty()) {
 				for (Node node : foundNodes) {
-					
+
 					columnRowBuilder.setLength(0);
-					
+
 					// Create the result wall
 					columnRowBuilder.append(" |  ID |");
-										
+
 					// Get each of the nodes properties
 					// Add the properties to create the column rows
 					Iterable<String> propertyKeys = node.getPropertyKeys();
 					Integer keyCount = 0;
 					ArrayList<String> nodeProperties = new ArrayList<String>();
-					for (String prop : propertyKeys){
-						columnRowBuilder.append( prop + " | " );
-						nodeProperties.add( prop );
+					for (String prop : propertyKeys) {
+						columnRowBuilder.append(prop + " | ");
+						nodeProperties.add(prop);
 					}
-					
+
 					columnRowBuilder.append(" RELATIONSHIPS  |");
-					
+
 					// Set and print the column row
 					columnRow = columnRowBuilder.toString();
-					
-					System.out.println( columnRow );
-					
+
+					System.out.println(columnRow);
+
 					// Reset result row
 					resultRowBuilder.setLength(0);
-					
-					resultRowBuilder.append( " | " + node.getId() + " |  " );
-					
-					for( String nProp : nodeProperties ){
-						resultRowBuilder.append( node.getProperty( nProp ) + " | ");
+
+					resultRowBuilder.append(" | " + node.getId() + " |  ");
+
+					for (String nProp : nodeProperties) {
+						resultRowBuilder.append(node.getProperty(nProp) + " | ");
 					}
-					
-					
-					//resultRowBuilder.append(" | \t" + node.getId() + " | \t" + node.getProperty(nodeAttribute) + " | \t");
-					
+
+					// resultRowBuilder.append(" | \t" + node.getId() + " | \t"
+					// + node.getProperty(nodeAttribute) + " | \t");
+
 					// Get a count of relationships
 					Iterable<Relationship> relationships = node.getRelationships();
 					Integer relCount;
 					Map<String, Integer> relsOfType = new HashMap<String, Integer>();
 
-					
 					for (Relationship rel : relationships) {
 
 						if (relsOfType.containsKey(rel.getType().name())) {
@@ -422,32 +425,36 @@ public class GraphDatabase {
 						}
 
 					}
-					
+
 					for (Map.Entry<String, Integer> nodeRelAttributes : relsOfType.entrySet()) {
-						if(relsOfType.entrySet().size() > 1){
-							resultRowBuilder.append(  nodeRelAttributes.getKey().toString() + "," );
+						if (relsOfType.entrySet().size() > 1) {
+							resultRowBuilder.append(nodeRelAttributes.getKey().toString() + ",");
 						} else {
-							resultRowBuilder.append(  nodeRelAttributes.getKey().toString());
+							resultRowBuilder.append(nodeRelAttributes.getKey().toString());
 						}
-						
-						//System.out.println(" | \t" + node.getId() + " | \t" + node.getProperty(nodeAttribute) + " | \t"
-						//		+ nodeRelAttributes.getKey().toString() + " | \t" + nodeRelAttributes.getValue().toString() + " \t " + "|");
+
+						// System.out.println(" | \t" + node.getId() + " | \t" +
+						// node.getProperty(nodeAttribute) + " | \t"
+						// + nodeRelAttributes.getKey().toString() + " | \t" +
+						// nodeRelAttributes.getValue().toString() + " \t " +
+						// "|");
 					}
-					
+
 					// Set and print the column row
 					resultRow = resultRowBuilder.toString();
-					System.out.println( resultRow );
-					
-					System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+					System.out.println(resultRow);
+
+					System.out
+							.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
 				}
 			} else {
 				System.out.println(" |                            						No nodes found										  | ");
-				System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+				System.out
+						.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
 			}
 
-			
 			tx.success();
 
 		} catch (Exception e) {
@@ -472,8 +479,8 @@ public class GraphDatabase {
 				foundNodes.add(findables.next());
 			}
 
-			System.out.println("\tLabel - " + nodeType + " \t | Attribute - " + nodeAttribute + " \t| Value - "
-					+ nodeRequiredValue + "\nResults for query:");
+			System.out.println("\tLabel - " + nodeType + " \t | Attribute - " + nodeAttribute + " \t| Value - " + nodeRequiredValue
+					+ "\nResults for query:");
 			System.out.println("-------------------------------------------------------------------------------------------");
 
 			// Loop through the graph finding nodes that match
